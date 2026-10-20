@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OASIS-E2 Certification Review</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: chart-binder feel — single reading column, item codes set in mono like form field labels, tabbed sections */
+:root{
+  --bg:#f5f7f8; --panel:#ffffff; --ink:#15232d; --muted:#5a6b76; --line:#d9e1e5;
+  --accent:#0f5e7a; --accent-soft:#e2eff4; --ok:#1f7a4d; --ok-soft:#e3f3ea; --bad:#b0352b; --bad-soft:#fbe7e4; --flag:#a8670a; --flag-soft:#fbf0dc;
+  --display:"Newsreader",Georgia,serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f171c; --panel:#162229; --ink:#e3ebef; --muted:#93a6b1; --line:#2a3a43;
+  --accent:#5fb3d3; --accent-soft:#16323e; --ok:#5cc58f; --ok-soft:#173327; --bad:#ef7d72; --bad-soft:#3a1e1b; --flag:#e3a64a; --flag-soft:#3a2c14; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f171c; --panel:#162229; --ink:#e3ebef; --muted:#93a6b1; --line:#2a3a43;
+  --accent:#5fb3d3; --accent-soft:#16323e; --ok:#5cc58f; --ok-soft:#173327; --bad:#ef7d72; --bad-soft:#3a1e1b; --flag:#e3a64a; --flag-soft:#3a2c14; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(28px,5vw,40px);line-height:1.1;margin:0 0 6px;text-wrap:balance}
+header p{color:var(--muted);margin:0;max-width:62ch}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+nav.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:24px 0;flex-wrap:wrap}
+nav.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;font:500 15px var(--body);color:var(--muted);cursor:pointer;margin-bottom:-1px}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+button:focus-visible,input:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+code,.code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);color:var(--accent);padding:1px 5px;border-radius:3px;white-space:nowrap}
+h2{font-family:var(--display);font-weight:600;font-size:24px;margin:36px 0 10px;text-wrap:balance}
+h2:first-child{margin-top:0}
+h3{font-size:15px;font-weight:600;margin:20px 0 6px}
+.prose p,.prose li{max-width:68ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--panel);margin:10px 0 4px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td.n{font-family:var(--mono);white-space:nowrap;color:var(--accent)}
+.note{border-left:3px solid var(--flag);background:var(--flag-soft);padding:10px 14px;border-radius:0 6px 6px 0;margin:14px 0;font-size:14.5px}
+.src{font-size:13px;color:var(--muted)}
+.src a{color:var(--accent)}
+/* exam */
+.setup{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;display:grid;gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font:600 14.5px var(--body);border-radius:6px;padding:10px 16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.btn:disabled{opacity:.45;cursor:default}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg label{padding:8px 12px;cursor:pointer;font-size:14px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--accent-soft);color:var(--accent);font-weight:600}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);transition:width .2s}
+.qhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap;margin:18px 0 8px}
+.qnum{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.dom{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.qtext{font-family:var(--display);font-size:21px;line-height:1.35;margin:0 0 16px;max-width:64ch}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer}
+.opt .k{font-family:var(--mono);color:var(--muted);flex:none;width:18px}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.feedback{margin-top:12px;padding:12px 14px;border-radius:6px;background:var(--panel);border:1px solid var(--line);font-size:14.5px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:5px;margin-top:22px}
+.grid button{font:500 12px var(--mono);padding:7px 0;border-radius:4px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.grid button.ans{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.grid button.fl{box-shadow:inset 0 -3px 0 var(--flag)}
+.grid button.cur{border-color:var(--ink);color:var(--ink)}
+.grid button.g{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.grid button.b{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+/* results */
+.score{display:flex;gap:28px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px}
+.big{font-family:var(--display);font-size:56px;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:99px}
+.pill.pass{background:var(--ok-soft);color:var(--ok)} .pill.fail{background:var(--bad-soft);color:var(--bad)}
+.doms{display:grid;gap:8px;margin-top:14px}
+.drow{display:grid;grid-template-columns:minmax(0,1fr) 120px 58px;gap:12px;align-items:center;font-size:14px}
+.drow .bar{height:8px} .drow span:last-child{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+.rv{border-top:1px solid var(--line);padding:16px 0}
+.rv .qtext{font-size:17px;margin-bottom:8px}
+.rv .ln{font-size:14.5px;margin:3px 0}
+.mark{font-family:var(--mono);font-weight:500;margin-right:6px}
+.mark.g{color:var(--ok)} .mark.b{color:var(--bad)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+@media (max-width:520px){.drow{grid-template-columns:minmax(0,1fr) 70px 50px}.qtext{font-size:19px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">CMS OASIS-E2 · effective April 1, 2026</div>
+  <h1>OASIS-E2 Certification Review</h1>
+  <p>Study guide and practice exam built on the CMS OASIS-E2 Guidance Manual and the Medicare home health Conditions of Participation. Conference notes will be added as a separate section.</p>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="guide" id="t-guide">Study guide</button>
+  <button role="tab" aria-selected="false" data-tab="exam" id="t-exam">Practice exam</button>
+  <button role="tab" aria-selected="false" data-tab="results" id="t-results">Results</button>
+</nav>
+
+<!-- ============ STUDY GUIDE ============ -->
+<section id="guide" class="prose">
+<h2>1. Time points and reasons for assessment</h2>
+<div class="tbl"><table>
+<tr><th>RFA</th><th>Assessment</th><th>Completion window</th><th>Home visit?</th></tr>
+<tr><td class="n">1</td><td>Start of Care (SOC)</td><td>Within 5 days after the SOC date (SOC date = day 0)</td><td>Yes</td></tr>
+<tr><td class="n">3</td><td>Resumption of Care (ROC)</td><td>Within 2 days after inpatient discharge (or after learning of it)</td><td>Yes</td></tr>
+<tr><td class="n">4</td><td>Recertification</td><td>Last 5 days of the 60-day certification period (days 56–60)</td><td>Yes</td></tr>
+<tr><td class="n">5</td><td>Other follow-up</td><td>Within 2 days of a major, unexpected change in condition</td><td>Yes</td></tr>
+<tr><td class="n">6</td><td>Transfer, not discharged</td><td>Within 2 days of learning of the inpatient admission</td><td>No</td></tr>
+<tr><td class="n">7</td><td>Transfer, discharged</td><td>Within 2 days of learning of the inpatient admission</td><td>No</td></tr>
+<tr><td class="n">8</td><td>Death at home</td><td>Within 2 days of learning of the death</td><td>No</td></tr>
+<tr><td class="n">9</td><td>Discharge from agency</td><td>Within 2 days after the discharge date (<code>M0906</code>)</td><td>Yes</td></tr>
+</table></div>
+<ul>
+<li><strong>Transfer trigger:</strong> inpatient admission of 24 hours or longer for reasons other than diagnostic testing only. ED visits and observation stays are not inpatient admissions.</li>
+<li><strong>ROC during the recert window:</strong> complete the ROC only; it takes the place of the recertification.</li>
+<li><strong>Submission:</strong> OASIS data must be submitted to iQIES within 30 days of <code>M0090</code> (date assessment completed).</li>
+<li><strong>Initial assessment (CoP §484.55(a)):</strong> within 48 hours of referral or return home, or on the physician-ordered SOC date.</li>
+<li><strong>All-payer collection:</strong> since July 1, 2025, OASIS applies to patients of any pay source unless exempt (under 18, maternity services, or only personal care / chore / housekeeping services).</li>
+</ul>
+
+<h2>2. Core conventions</h2>
+<ul>
+<li><strong>Day of assessment</strong> = the 24 hours immediately before the visit plus time spent with the patient, unless the item states another look-back.</li>
+<li><strong>One-clinician convention:</strong> one clinician is responsible for the assessment and its accuracy, but may gather input from other agency clinicians, the patient, caregivers, physicians and records.</li>
+<li><strong>Who may assess:</strong> RN when nursing is ordered at SOC. PT or SLP may perform the SOC in a therapy-only case. LPNs and therapy assistants may not perform comprehensive assessments.</li>
+<li><strong>M-item ADLs/IADLs (M1800–M2030)</strong> score the patient's <em>ability</em> to perform safely. <strong>Section GG</strong> scores <em>usual performance</em>.</li>
+<li>If ability varies, choose the response that applies more than 50% of the time during the day of assessment.</li>
+<li>The dash (<code>–</code>) means no information. Use it rarely. In E2, a dash is newly allowed on the <code>D0150</code> frequency items.</li>
+</ul>
+
+<h2>3. Section GG coding scale</h2>
+<div class="tbl"><table>
+<tr><th>Code</th><th>Meaning</th></tr>
+<tr><td class="n">06</td><td>Independent: patient completes the activity with no assistance</td></tr>
+<tr><td class="n">05</td><td>Setup or clean-up: helper assists only before or after the activity</td></tr>
+<tr><td class="n">04</td><td>Supervision or touching: verbal cues, touching or steadying, contact guard</td></tr>
+<tr><td class="n">03</td><td>Partial/moderate: helper does less than half the effort</td></tr>
+<tr><td class="n">02</td><td>Substantial/maximal: helper does more than half the effort</td></tr>
+<tr><td class="n">01</td><td>Dependent: helper does all the effort, or two or more helpers are needed</td></tr>
+<tr><td class="n">07</td><td>Patient refused</td></tr>
+<tr><td class="n">09</td><td>Not applicable: not attempted and patient did not do this before the current illness</td></tr>
+<tr><td class="n">10</td><td>Not attempted due to environmental limitations</td></tr>
+<tr><td class="n">88</td><td>Not attempted due to medical condition or safety concerns</td></tr>
+</table></div>
+<ul>
+<li>SOC/ROC performance reflects the patient's status before benefiting from agency services.</li>
+<li>At SOC, at least one discharge goal is required for a self-care or mobility item.</li>
+<li><code>GG0130E</code> shower/bathe excludes washing the back and hair. <code>GG0170G</code> car transfer excludes opening the door and fastening the seat belt.</li>
+<li><code>GG0100</code> prior functioning: 3 independent, 2 needed some help, 1 dependent, 8 unknown, 9 not applicable.</li>
+</ul>
+
+<h2>4. Cognition, mood and pain</h2>
+<h3>BIMS (<code>C0200–C0500</code>)</h3>
+<ul>
+<li>Attempt the interview unless the patient is rarely or never understood (<code>C0100</code>).</li>
+<li>Words to repeat: <em>sock, blue, bed</em>. Temporal orientation: year, month, day of week.</li>
+<li>Summary score 0–15: 13–15 intact, 8–12 moderately impaired, 0–7 severely impaired. Code 99 if the interview could not be completed.</li>
+</ul>
+<h3>PHQ-2 to 9 (<code>D0150</code>, <code>D0160</code>)</h3>
+<ul>
+<li>Look-back is the last 2 weeks. Frequency codes: 0 = never or 1 day, 1 = 2–6 days, 2 = 7–11 days, 3 = 12–14 days.</li>
+<li>If both <code>D0150A2</code> and <code>D0150B2</code> are 0 or 1, stop. Otherwise continue to the full PHQ-9.</li>
+</ul>
+<h3>Pain (<code>J0510–J0530</code>)</h3>
+<ul><li>Look-back is the past 5 days: effect on sleep, interference with therapy, interference with day-to-day activities.</li></ul>
+
+<h2>5. Integumentary</h2>
+<div class="tbl"><table>
+<tr><th>Stage</th><th>Key feature</th></tr>
+<tr><td class="n">1</td><td>Intact skin, non-blanchable redness. Not counted in <code>M1306</code>.</td></tr>
+<tr><td class="n">2</td><td>Partial-thickness loss of dermis, shallow open ulcer, red-pink bed, no slough</td></tr>
+<tr><td class="n">3</td><td>Full-thickness tissue loss, fat may show, no exposed bone, tendon or muscle</td></tr>
+<tr><td class="n">4</td><td>Full-thickness loss with exposed bone, tendon or muscle</td></tr>
+<tr><td class="n">Unst.</td><td>Non-removable dressing/device, bed covered by slough or eschar, or deep tissue injury</td></tr>
+</table></div>
+<ul>
+<li>No reverse staging: a healing Stage 3 stays a Stage 3 until healed.</li>
+<li>A surgically debrided pressure ulcer remains a pressure ulcer. One repaired with a muscle flap or graft becomes a surgical wound.</li>
+<li>Implanted venous access ports are surgical wounds; PICC lines and ostomies are not.</li>
+<li><code>M1330</code> stasis ulcers come from venous insufficiency only, not arterial disease. Diabetic, arterial and moisture-related lesions are not pressure ulcers.</li>
+<li><code>M1342</code> status: 0 newly epithelialized, 1 fully granulating, 2 early/partial granulation, 3 not healing.</li>
+</ul>
+
+<h2>6. ADL items used by PDGM</h2>
+<div class="tbl"><table>
+<tr><th>Item</th><th>Covers</th></tr>
+<tr><td class="n">M1800</td><td>Grooming: face and hands, hair, shaving or makeup, teeth/dentures, nails</td></tr>
+<tr><td class="n">M1810 / M1820</td><td>Upper / lower body dressing, including getting clothes; lower body includes socks and shoes</td></tr>
+<tr><td class="n">M1830</td><td>Bathing the entire body, excluding grooming; includes getting in and out of tub/shower</td></tr>
+<tr><td class="n">M1840</td><td>Toilet transferring: getting to and from, on and off the toilet or commode</td></tr>
+<tr><td class="n">M1850</td><td>Transferring bed ↔ chair, on/off bedside commode, turning in bed if bedfast</td></tr>
+<tr><td class="n">M1860</td><td>Ambulation/locomotion, including stairs and uneven surfaces</td></tr>
+<tr><td class="n">M1033</td><td>Risk for hospitalization (also feeds the PDGM functional score)</td></tr>
+</table></div>
+<p><code>M1033</code> thresholds to know: 2+ falls or any fall with injury in 12 months; 2+ hospitalizations or 2+ ED visits in 6 months; taking 5 or more medications; decline in mental, emotional or behavioral status in 3 months.</p>
+
+<h2>7. Medications</h2>
+<ul>
+<li><code>M2001</code> drug regimen review screens for adverse reactions, ineffective therapy, side effects, interactions, duplicate therapy, omissions, dosage errors and non-adherence.</li>
+<li><code>M2003</code> follow-up: contact the physician or allowed practitioner and complete recommended actions by midnight of the next calendar day.</li>
+<li><code>N0415</code> high-risk drug classes: antipsychotic, anticoagulant, antibiotic, opioid, antiplatelet, hypoglycemic (including insulin). Column 2 records whether an indication is noted.</li>
+<li><code>M2020</code> oral meds excludes injectables and IV. <code>M2030</code> injectables excludes IV and infusion therapy.</li>
+</ul>
+
+<h2>8. What changed in OASIS-E2</h2>
+<ul>
+<li><code>A0810</code> (Sex) replaces <code>M0069</code> (Gender).</li>
+<li><code>A1255</code> replaces the <code>A1250</code> transportation items.</li>
+<li>Several items were added to the ROC (RFA 03).</li>
+<li>A dash is now an allowed value for the <code>D0150</code> frequency items.</li>
+<li>The COVID-19 vaccine quality measure was dropped from HH QRP reporting with the April 2026 refresh.</li>
+</ul>
+<div class="note">Verify agency-specific workflows against the current CMS Q&amp;As. Conference notes you share later will be added here and folded into the exam.</div>
+<p class="src">Sources: <a href="https://www.cms.gov/files/document/final-oasis-e2-manual-04-01-2026.pdf" target="_blank" rel="noopener">CMS OASIS-E2 Guidance Manual (04/01/2026)</a> · <a href="https://www.cms.gov/oasis" target="_blank" rel="noopener">CMS OASIS User Manuals page</a> · <a href="https://www.dhs.wisconsin.gov/regulations/hha/oasis.htm" target="_blank" rel="noopener">Wisconsin DHS OASIS page</a></p>
+</section>
+
+<!-- ============ EXAM ============ -->
+<section id="exam" hidden>
+  <div id="setup" class="setup">
+    <div>
+      <h2 style="margin:0 0 4px">Practice exam</h2>
+      <p class="src" style="margin:0"><span id="qcount"></span> questions across 11 domains. Target score: 80%.</p>
+    </div>
+    <div class="row">
+      <span style="font-size:14px;font-weight:600">Mode</span>
+      <div class="seg">
+        <label><input type="radio" name="mode" id="m-exam" value="exam" checked> Exam (score at end)</label>
+        <label><input type="radio" name="mode" id="m-study" value="study"> Study (instant feedback)</label>
+      </div>
+    </div>
+    <div class="row">
+      <label style="font-size:14px;display:flex;gap:8px;align-items:center"><input type="checkbox" id="shuffle" checked> Shuffle question order</label>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="start">Start exam</button>
+      <button class="btn" id="resume" hidden>Resume saved exam</button>
+    </div>
+  </div>
+
+  <div id="runner" hidden>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="qhead"><span class="qnum" id="qnum"></span><span class="dom" id="qdom"></span></div>
+    <p class="qtext" id="qtext"></p>
+    <div class="opts" id="opts"></div>
+    <div class="feedback" id="fb" hidden></div>
+    <div class="nav">
+      <div class="row">
+        <button class="btn" id="prev">Previous</button>
+        <button class="btn" id="flag">Flag</button>
+      </div>
+      <div class="row">
+        <button class="btn" id="next">Next</button>
+        <button class="btn primary" id="submit">Submit exam</button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="src" id="unans"></p>
+  </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section id="results" hidden>
+  <div id="noresults"><p>Finish the practice exam to see your score, domain breakdown and the rationale for every question.</p></div>
+  <div id="res" hidden>
+    <div class="score">
+      <div><div class="big" id="pct"></div><div class="src" id="raw"></div></div>
+      <div><span class="pill" id="verdict"></span><p class="src" style="margin:8px 0 0" id="when"></p></div>
+    </div>
+    <h2>Score by domain</h2>
+    <div class="doms" id="doms"></div>
+    <h2>Answers and rationale</h2>
+    <div class="filters seg" style="display:inline-flex">
+      <label><input type="radio" name="rf" id="rf-all" value="all" checked> All</label>
+      <label><input type="radio" name="rf" id="rf-miss" value="miss"> Missed</label>
+      <label><input type="radio" name="rf" id="rf-flag" value="flag"> Flagged</label>
+    </div>
+    <div id="review"></div>
+    <div class="row" style="margin-top:20px"><button class="btn primary" id="retake">Retake exam</button><button class="btn" id="retakeMiss">Retake missed only</button></div>
+  </div>
+</section>
+</div>
+
+<script>
+const D={T:"Time points & RFAs",C:"Conventions",H:"Patient history & diagnoses",N:"Cognition, mood & pain",W:"Integumentary",R:"Respiratory & elimination",A:"ADL/IADL M-items",G:"Section GG",M:"Medications",X:"Transfer, discharge & outcomes",E:"E2 changes & regulations"};
+// [domain, question, options, correctIndex, rationale]
+const Q=[
+["T","The SOC comprehensive assessment must be completed within what timeframe?",["Within 48 hours of the referral","Within 5 days after the SOC date","Within 7 days after the SOC date","Before the second skilled visit"],1,"The SOC comprehensive assessment is due within 5 days after the SOC date, with the SOC date counted as day 0 (CoP §484.55(b)(1))."],
+["T","A patient returns home from an inpatient stay on Monday. The ROC assessment is due no later than:",["Monday","Wednesday","Friday","The next scheduled visit"],1,"The ROC must be completed within 2 calendar days after inpatient facility discharge (or after the agency learns of it). Monday + 2 days = Wednesday."],
+["T","The recertification follow-up assessment (RFA 4) is completed during which window?",["Days 1–5 of the next period","Days 55–60","Days 56–60 of the current 60-day period","Any day after day 45"],2,"Recertification is completed in the last 5 days of the 60-day certification period, days 56 through 60."],
+["T","Which event requires a Transfer OASIS?",["ED visit lasting 14 hours, sent home","Observation stay of 30 hours","Hospital admission of 26 hours for treatment of pneumonia","Outpatient MRI with same-day return"],2,"A transfer requires an inpatient admission of 24 hours or longer for reasons other than diagnostic testing only. ED visits and observation stays are not inpatient admissions."],
+["T","A patient is admitted to the hospital for 36 hours solely for diagnostic testing and returns home. What OASIS is required?",["Transfer (RFA 6) and ROC (RFA 3)","Transfer only","No transfer or ROC is required","Other follow-up (RFA 5)"],2,"Inpatient stays for diagnostic testing only do not meet the transfer definition, so no Transfer or ROC is required."],
+["T","The discharge assessment (RFA 9) must be completed within:",["2 days after the discharge date (M0906)","5 days after the last visit","24 hours of the physician's discharge order","30 days of the last visit"],0,"The discharge comprehensive assessment is completed within 2 calendar days after the discharge date recorded in M0906."],
+["T","OASIS data must be submitted to the CMS system within how many days of M0090?",["7","14","30","60"],2,"Agencies must electronically submit OASIS data within 30 days of the M0090 date assessment completed."],
+["T","An 'Other follow-up' assessment (RFA 5) is triggered by:",["Every change in medication","A major, unexpected decline or improvement in condition","Any missed visit","A change in payer source"],1,"RFA 5 is completed within 2 days of a major decline or improvement in the patient's condition that was not expected, per agency policy."],
+["T","A patient dies at home. Which RFA is completed?",["RFA 7","RFA 8","RFA 9","No OASIS is required"],1,"RFA 8 is Death at Home, completed within 2 days of learning of the death. No home visit is required."],
+["T","A patient is admitted to the hospital and the agency will not resume care. Which RFA applies?",["RFA 6 – Transfer, not discharged","RFA 7 – Transfer, discharged","RFA 9 – Discharge from agency","RFA 6 followed by RFA 9"],1,"RFA 7 is used when the patient is transferred to an inpatient facility and discharged from the agency. A separate RFA 9 is not done."],
+["T","A patient returns from the hospital on day 58 of the certification period. What should be completed?",["Recertification only","ROC only","Both ROC and Recertification","Neither until day 61"],1,"When a ROC falls in the last 5 days of the period, the ROC alone is completed; it satisfies the recertification requirement."],
+["T","The SOC date is defined as:",["The date of the referral","The date of the physician's signature","The date of the first billable visit","The date of the initial phone contact"],2,"The SOC date is the date of the first billable service provided to the patient."],
+["T","M0090 'Date Assessment Completed' is:",["The date of the first visit","The last date on which information was collected for the assessment","The date the assessment was transmitted","The date the physician signed the plan of care"],1,"M0090 is the date the assessment is completed, meaning the last date information was gathered to complete it."],
+["T","Which assessment type does NOT require an in-home visit?",["Start of Care","Resumption of Care","Transfer to inpatient facility","Discharge from agency"],2,"Transfers (RFA 6/7) and Death at Home (RFA 8) are completed from available information without a home visit."],
+["T","Under current CMS policy, OASIS collection applies to which patients?",["Medicare and Medicaid patients only","Patients of any pay source, unless exempt","Medicare Advantage patients only","Only patients receiving skilled nursing"],1,"Since July 1, 2025, OASIS data collection and submission are required for patients with any pay source who are not exempt."],
+["T","Which patient is exempt from OASIS data collection?",["A 16-year-old receiving skilled nursing","A 70-year-old private-pay patient","A Medicaid patient receiving PT","A Medicare Advantage patient receiving wound care"],0,"Exemptions include patients under 18, patients receiving maternity services, and patients receiving only chore, housekeeping or personal care services."],
+["T","Which RFA number identifies a Resumption of Care?",["1","3","4","5"],1,"RFA 1 = SOC, RFA 3 = ROC, RFA 4 = Recertification, RFA 5 = Other follow-up."],
+
+["C","For most OASIS items, the 'day of assessment' refers to:",["The calendar day of the visit only","The 24 hours before the visit plus the time spent with the patient","The past 7 days","The full assessment window"],1,"Unless an item gives its own look-back, the day of assessment is the 24 hours immediately preceding the visit plus time spent with the patient during the visit."],
+["C","Under the one-clinician convention, the assessing clinician:",["Must collect every item personally with no input","May incorporate information from other agency staff, caregivers and records, but remains responsible for the responses","May delegate the assessment to an LPN","May split responsibility for the assessment between two disciplines"],1,"One clinician takes responsibility for the assessment and its accuracy, but may gather input from other agency clinicians, the patient, caregivers, physicians and records."],
+["C","When skilled nursing and PT are both ordered at SOC, who performs the SOC comprehensive assessment?",["PT","RN","Either discipline","The clinician who sees the patient first"],1,"When nursing is ordered at SOC, the RN must complete the SOC comprehensive assessment."],
+["C","In a therapy-only case where PT establishes eligibility, who may complete the SOC?",["PT","PTA","LPN","OT under Medicare in all cases"],0,"When only therapy is ordered, the PT (or SLP) may perform the SOC comprehensive assessment."],
+["C","Which clinician may NOT perform an OASIS comprehensive assessment?",["RN","PT","SLP","LPN"],3,"LPNs and therapy assistants (PTA, COTA) may not perform comprehensive assessments."],
+["C","A patient's ability on an M-item ADL varies during the day of assessment. How should it be coded?",["Code the best performance","Code the worst performance","Code what is true more than 50% of the time","Code a dash"],2,"When ability varies, choose the response that represents the patient's status more than 50% of the time during the day of assessment."],
+["C","M-item ADLs such as M1830 bathing are scored based on the patient's:",["Usual performance","Willingness","Ability to perform safely","Caregiver's report only"],2,"M1800–M2030 measure the patient's ability to safely perform the activity, not willingness or actual performance."],
+["C","Section GG items are scored based on the patient's:",["Ability","Usual performance","Best performance","Prior level of function"],1,"Section GG codes the patient's usual performance. This differs from the M-item ADLs, which score ability."],
+["C","A dash (–) entered in an OASIS item indicates:",["Not applicable","Patient refused","No information is available","Activity not attempted"],2,"A dash means no information. CMS expects dashes to be used rarely."],
+["C","A patient can safely bathe but chooses not to. How is M1830 coded?",["Based on the choice not to bathe","Based on the ability to bathe safely","With a dash","As 'unable'"],1,"M-item ADLs reflect ability, so code what the patient is able to do, even if they choose not to."],
+
+["H","M1021 Primary Diagnosis should reflect:",["The first diagnosis in the hospital record","The chief reason the patient is receiving home health care","The most expensive diagnosis","The oldest chronic condition"],1,"The primary diagnosis is the condition most related to the current plan of care and the chief reason for home health services."],
+["H","Which code type may NOT be reported in M1021 or M1023?",["Z codes","External cause codes (V, W, X, Y)","Combination codes","Diabetes codes"],1,"External cause codes are not allowed in M1021/M1023. Z codes may be reported where coding guidelines permit."],
+["H","M1028 Active Diagnoses asks about which conditions?",["Hypertension and CHF","PVD/PAD and diabetes mellitus","COPD and asthma","Depression and anxiety"],1,"M1028 captures whether the patient has active diagnoses of peripheral vascular or peripheral arterial disease and diabetes mellitus."],
+["H","In M1033 Risk for Hospitalization, 'currently taking' how many medications is a risk factor?",["3 or more","4 or more","5 or more","10 or more"],2,"M1033 includes 'currently taking 5 or more medications' as a risk factor."],
+["H","Which fall history is counted in M1033?",["Any fall in the past 30 days","2 or more falls, or any fall with injury, in the past 12 months","Only falls requiring hospitalization","3 or more falls in 6 months"],1,"M1033 includes a history of 2 or more falls, or any fall with injury, in the past 12 months."],
+["H","M1033 counts multiple hospitalizations as:",["2 or more in the past 6 months","2 or more in the past 12 months","3 or more in the past year","1 or more in the past 30 days"],0,"Multiple hospitalizations means 2 or more in the past 6 months. Multiple ED visits uses the same threshold."],
+["H","M0104 Date of Referral is:",["The date the physician signed the order","The most recent date verbal, written or electronic authorization to begin services was received","The SOC date","The hospital discharge date"],1,"M0104 is the most recent date the agency received verbal, written or electronic authorization to begin home care."],
+["H","M0102 Date of Physician-Ordered SOC is completed when:",["Always","Only when the physician specified a date to begin care","Only for Medicare patients","Only at ROC"],1,"M0102 is completed only if the physician or allowed practitioner indicated a specific SOC date."],
+["H","In OASIS-E2, which item replaced M0069 Gender?",["A0800","A0810 Sex","A1005","M0066"],1,"In OASIS-E2, A0810 replaces M0069 Gender."],
+["H","Ethnicity (A1005) and race (A1010) are best collected by:",["Clinician observation","Patient self-report","Medical record only","Physician report"],1,"These are self-report items. Ask the patient, or a family member if the patient cannot respond; do not code from observation."],
+["H","A1110 asks about preferred language and:",["Literacy","Whether the patient needs or wants an interpreter","Hearing ability","Religious preference"],1,"A1110 captures the patient's preferred language and whether they need or want an interpreter."],
+["H","B1300 Health Literacy asks how often the patient needs help:",["Getting to appointments","Reading instructions or written material from a doctor or pharmacy","Taking medications","Managing finances"],1,"B1300 asks how often the patient needs someone to help when reading instructions, pamphlets or other written material from health care providers."],
+["H","In PDGM, the clinical grouping is driven by:",["The principal diagnosis on the claim","M1033 responses","The number of visits","The referral source"],0,"The PDGM clinical group is assigned from the principal diagnosis reported on the home health claim."],
+
+["N","A BIMS summary score of 14 indicates:",["Cognitively intact","Moderately impaired","Severely impaired","Unable to score"],0,"BIMS scores of 13–15 indicate intact cognition; 8–12 moderate impairment; 0–7 severe impairment."],
+["N","The three BIMS recall words are:",["Apple, table, penny","Sock, blue, bed","Cat, red, chair","Shoe, green, lamp"],1,"The BIMS uses sock, blue and bed."],
+["N","When should the BIMS interview be attempted?",["Only for patients with a dementia diagnosis","Unless the patient is rarely or never understood","Only at SOC","Only if the caregiver agrees"],1,"Attempt the BIMS unless the patient is rarely or never understood (C0100). Otherwise use staff assessment items."],
+["N","BIMS temporal orientation asks the patient for:",["Date of birth, address, phone","Year, month and day of the week","Name of president, city, state","Time of day and season"],1,"Temporal orientation covers year, month and day of the week."],
+["N","On the PHQ-2, when do you continue to the full PHQ-9?",["Always","If either D0150A2 or D0150B2 is coded 2 or 3","Only if both are coded 3","Only if the patient has a depression diagnosis"],1,"If both A2 and B2 are 0 or 1, the interview ends. If either is 2 or higher, continue."],
+["N","On the PHQ, frequency code 2 means the symptom occurred on:",["2–6 days","7–11 days","12–14 days","Never or 1 day"],1,"PHQ frequency: 0 = never or 1 day, 1 = 2–6 days, 2 = 7–11 days, 3 = 12–14 days."],
+["N","The PHQ look-back period is:",["24 hours","5 days","2 weeks","30 days"],2,"The PHQ asks about the last 2 weeks."],
+["N","Which feature is part of the delirium screen in C1310?",["Hallucinations only","Acute onset and fluctuating course, inattention, disorganized thinking, altered level of consciousness","Depression and anxiety","Short-term memory loss only"],1,"C1310 is based on the Confusion Assessment Method: acute onset/fluctuation, inattention, disorganized thinking and altered level of consciousness."],
+["N","M1740 captures cognitive, behavioral and psychiatric symptoms demonstrated:",["At least once a week","Daily only","Only during the visit","In the past 12 months"],0,"M1740 reports symptoms demonstrated at least once a week, whether reported or observed."],
+["N","Pain interference items J0510–J0530 use what look-back period?",["Day of assessment","Past 5 days","Past 2 weeks","Past 30 days"],1,"The pain items ask about the past 5 days."],
+["N","D0700 asks about:",["Hearing","Social isolation – how often the patient feels lonely or isolated","Sleep","Appetite"],1,"D0700 asks how often the patient feels lonely or isolated from those around them."],
+["N","M1700 Cognitive Functioning reflects:",["Only the BIMS score","Alertness, orientation, comprehension, concentration and immediate memory","Mood","Behaviors only"],1,"M1700 summarizes alertness/orientation, comprehension, concentration and immediate memory for simple commands."],
+
+["W","A Stage 1 pressure injury is described as:",["Shallow open ulcer","Intact skin with non-blanchable redness","Full-thickness loss","Deep tissue injury"],1,"Stage 1 is intact skin with non-blanchable redness of a localized area."],
+["W","A shallow open ulcer with a red-pink wound bed and no slough is:",["Stage 1","Stage 2","Stage 3","Unstageable"],1,"Stage 2 is partial-thickness loss of dermis presenting as a shallow open ulcer with a red-pink bed, without slough."],
+["W","Full-thickness tissue loss with visible subcutaneous fat but no exposed bone, tendon or muscle is:",["Stage 2","Stage 3","Stage 4","Unstageable"],1,"Stage 3 is full-thickness loss; fat may be visible, but bone, tendon and muscle are not exposed."],
+["W","A pressure ulcer with exposed tendon is:",["Stage 3","Stage 4","Unstageable","Deep tissue injury"],1,"Stage 4 has full-thickness loss with exposed bone, tendon or muscle."],
+["W","A pressure ulcer whose base is covered by eschar is coded as:",["Stage 3","Stage 4","Unstageable","Not reported"],2,"When slough or eschar obscures the wound bed, the stage cannot be determined, so it is unstageable."],
+["W","A pressure ulcer under a non-removable cast is coded as:",["Stage 2","Unstageable","Not reported","Stage 1"],1,"A pressure ulcer that cannot be seen because of a non-removable dressing or device is unstageable."],
+["W","A Stage 3 pressure ulcer is now granulating and shallower. How is it reported?",["Stage 2","Stage 3","Healed","Unstageable"],1,"Reverse staging is not allowed. The ulcer stays Stage 3 until healed."],
+["W","A Stage 4 pressure ulcer was repaired with a muscle flap. How is it reported?",["Stage 4 pressure ulcer","Healed pressure ulcer","Surgical wound","Unstageable"],2,"A pressure ulcer surgically repaired with a flap or graft is reported as a surgical wound."],
+["W","A pressure ulcer that was surgically debrided is reported as:",["A surgical wound","A pressure ulcer","A stasis ulcer","Not reported"],1,"Surgical debridement does not change the wound type; it remains a pressure ulcer."],
+["W","M1306 asks whether the patient has at least one unhealed pressure ulcer/injury at:",["Any stage","Stage 1 or higher","Stage 2 or higher, or unstageable","Stage 3 or higher"],2,"M1306 counts Stage 2 or higher and unstageable. Stage 1 is excluded."],
+["W","Which is reported as a surgical wound in M1340?",["PICC line insertion site","Implanted venous access port","Colostomy","Peripheral IV site"],1,"Implanted venous access devices are surgical wounds. PICC lines, peripheral IVs and ostomies are not."],
+["W","M1330 stasis ulcers are caused by:",["Arterial insufficiency","Venous insufficiency","Diabetes","Pressure"],1,"Stasis ulcers result from venous insufficiency. Arterial and diabetic ulcers are not reported in M1330."],
+["W","A diabetic foot ulcer caused by neuropathy is reported in:",["M1311 as a pressure ulcer","M1330 as a stasis ulcer","Neither M1311 nor M1330","M1340 as a surgical wound"],2,"Diabetic ulcers are not pressure, stasis or surgical wounds, so they are not reported in those items."],
+["W","A Stage 2 pressure ulcer has fully healed by ROC. In M1311 it is:",["Reported as Stage 2","Reported as Stage 1","Not reported as a current ulcer","Reported as unstageable"],2,"Healed pressure ulcers are not reported as current pressure ulcers."],
+["W","Moisture-associated skin damage and skin tears are reported as:",["Stage 2 pressure ulcers","Not pressure ulcers","Stasis ulcers","Unstageable"],1,"These are not pressure injuries and are not reported in the pressure ulcer items."],
+["W","On M1342, code 3 means the surgical wound is:",["Newly epithelialized","Fully granulating","Early/partial granulation","Not healing"],3,"M1342: 0 newly epithelialized, 1 fully granulating, 2 early/partial granulation, 3 not healing."],
+["W","A deep tissue injury is reported in M1311 as:",["Stage 1","Stage 2","Unstageable","Not reported"],2,"A deep tissue injury is reported as unstageable."],
+
+["R","A patient uses oxygen continuously. How is M1400 Dyspnea assessed?",["Without oxygen","While using oxygen","At rest only","It is not assessed"],1,"If oxygen is used continuously, assess dyspnea while the patient uses it. If intermittent, assess without oxygen."],
+["R","M1610 response 2 indicates:",["Incontinence","Patient requires a urinary catheter","No incontinence","Occasional stress incontinence"],1,"M1610: 0 no incontinence or catheter, 1 incontinent, 2 requires a urinary catheter (external, indwelling, intermittent or suprapubic)."],
+["R","A urostomy is reported in M1630 Ostomy for Bowel Elimination?",["Yes","No","Only if new","Only at discharge"],1,"M1630 is limited to bowel ostomies. A urostomy is not counted."],
+["R","M1600 asks whether the patient was treated for a UTI in the past:",["7 days","14 days","30 days","60 days"],1,"M1600 asks about UTI treatment in the past 14 days."],
+["R","O0110 Special Treatments captures:",["Diet only","Treatments such as chemotherapy, radiation, oxygen, IV medications and dialysis","Medication adherence","Home safety"],1,"O0110 lists special treatments, procedures and programs, including oxygen, suctioning, IV meds, transfusions and dialysis."],
+["R","M1620 Bowel Incontinence Frequency is answered:",["Based on how often bowel incontinence occurs","Only if the patient has an ostomy","Based on stool consistency","Only at SOC"],0,"M1620 reports how often the patient experiences bowel incontinence."],
+
+["A","Which task is part of M1800 Grooming?",["Bathing the back","Shaving and oral care","Dressing","Toileting"],1,"Grooming covers washing face and hands, hair care, shaving or makeup, teeth/denture care and fingernail care."],
+["A","M1810 Upper Body Dressing includes:",["Only putting on a shirt","Getting clothes from closets and drawers and putting them on","Socks and shoes","Buttoning only"],1,"Dressing items include obtaining clothing from closets and drawers as well as putting it on and removing it."],
+["A","Putting on socks and shoes is part of:",["M1810","M1820","M1800","M1830"],1,"Lower body dressing (M1820) includes undergarments, slacks, socks or nylons and shoes."],
+["A","A patient safely bathes in the shower independently using a shower chair. M1830 is:",["0","1","2","3"],1,"M1830 response 1: with the use of devices, able to bathe self in shower or tub independently, including getting in and out."],
+["A","M1830 Bathing excludes:",["Getting into the tub","Washing face, hands and shampooing hair","Drying the body","Washing the back"],1,"Washing face and hands and shampooing hair are grooming tasks, not bathing."],
+["A","M1840 Toilet Transferring includes:",["Perineal hygiene","Getting to and from the toilet or commode and on and off it","Managing clothing","Emptying a catheter"],1,"M1840 addresses getting to/from the toilet or bedside commode and transferring on and off."],
+["A","M1845 Toileting Hygiene includes:",["Getting to the toilet","Maintaining perineal hygiene and adjusting clothing or pads","Emptying a commode","Changing a catheter"],1,"M1845 covers perineal hygiene and adjusting clothes and incontinence pads before and after toileting."],
+["A","A bedfast patient cannot transfer but can turn and position themselves in bed. M1850 is:",["3","4","5","2"],2,"M1850 response 5: bedfast, unable to transfer but able to turn and position self in bed."],
+["A","M1860 response 0 means the patient can walk:",["With a walker","Independently on even and uneven surfaces and negotiate stairs, without a device","Only with supervision","Only indoors"],1,"Response 0 is independent ambulation on even and uneven surfaces and stairs, with or without railings, without an assistive device."],
+["A","A patient walks independently with a cane on even surfaces but needs help on stairs. M1860 is:",["0","1","2","3"],1,"Response 1 covers use of a one-handed device to walk alone, or needing supervision or assistance on stairs or uneven surfaces."],
+["A","A patient performs a task but cannot do it safely. The M-item ADL should be coded as:",["Independent","Needing assistance","Dash","Not applicable"],1,"M-item ADLs reflect the ability to perform the activity safely. Unsafe performance indicates a need for help."],
+["A","Which OASIS items feed the PDGM functional impairment level?",["M1800–M1860 and M1033","GG0130 and GG0170","M2020 and M2030","C0500 and D0160"],0,"PDGM functional impairment uses M1800, M1810, M1820, M1830, M1840, M1850, M1860 and M1033."],
+["A","In M2102, a willing caregiver who needs instruction to help with ADLs is coded:",["0","1","2","4"],2,"M2102 response 2: non-agency caregivers need training or supportive services to provide assistance."],
+
+["G","A patient completes sit-to-stand with no help at all. GG0170D is coded:",["06","05","04","03"],0,"06 means independent: the patient completes the activity by themselves with no assistance."],
+["G","The helper places the meal tray and opens containers; the patient eats independently. GG0130A is:",["06","05","04","03"],1,"05 Setup or clean-up: the helper assists only before or after the activity."],
+["G","The helper provides verbal cues and contact guard throughout a toilet transfer. Code:",["05","04","03","02"],1,"04 Supervision or touching assistance includes verbal cues, touching, steadying or contact guard."],
+["G","The helper lifts or holds trunk or limbs but does less than half the effort. Code:",["04","03","02","01"],1,"03 Partial/moderate assistance: the helper does less than half the effort."],
+["G","The helper does more than half the effort for lower body dressing. Code:",["04","03","02","01"],2,"02 Substantial/maximal assistance: the helper does more than half the effort."],
+["G","Two helpers are required for a bed-to-chair transfer. Code:",["03","02","01","88"],2,"If two or more helpers are needed, code 01 Dependent."],
+["G","The patient refuses to attempt walking 50 feet. Code:",["07","09","10","88"],0,"07 Patient refused."],
+["G","The patient did not use stairs before this illness and does not attempt them now. Code:",["07","09","10","88"],1,"09 Not applicable: not attempted and the patient did not perform the activity prior to the current illness."],
+["G","Car transfer cannot be attempted because of icy weather. Code:",["07","09","10","88"],2,"10 Not attempted due to environmental limitations, such as weather or lack of equipment."],
+["G","Walking is not attempted because the patient is on bed rest after surgery. Code:",["07","09","10","88"],3,"88 Not attempted due to medical condition or safety concerns."],
+["G","GG SOC performance should reflect the patient's status:",["After 2 weeks of therapy","Before benefiting from agency services","At discharge goal","As reported by the hospital"],1,"SOC/ROC functional status should be based on the patient's status before benefiting from agency services."],
+["G","At SOC, how many Section GG discharge goals are required?",["None","At least one for self-care or mobility","One for every item","Exactly three"],1,"At SOC, at least one discharge goal must be coded for a self-care or mobility item."],
+["G","GG0170G Car Transfer excludes:",["Getting into the passenger seat","Opening/closing the car door and fastening the seat belt","Getting out of the car","Sitting down in the car"],1,"Car transfer covers getting in and out of the passenger side; it excludes opening the door and fastening the seat belt."],
+["G","GG0130E Shower/Bathe Self excludes:",["Washing legs","Washing the back and hair","Drying the body","Rinsing"],1,"Shower/bathe self covers washing, rinsing and drying the body, excluding the back and hair."],
+["G","GG0100 Prior Functioning code 3 means:",["Dependent","Needed some help","Independent","Unknown"],2,"GG0100: 3 independent, 2 needed some help, 1 dependent, 8 unknown, 9 not applicable."],
+["G","GG0110 captures:",["Current device use","Prior device use before the current illness","Discharge goals","Fall history"],1,"GG0110 records devices the patient used before the current illness, exacerbation or injury."],
+["G","GG0130C Toileting Hygiene includes:",["Getting on and off the toilet","Managing undergarments and perineal hygiene","Emptying a bedside commode","Hand washing"],1,"Toileting hygiene covers perineal hygiene and adjusting clothes before and after toileting. Toilet transfers are scored separately."],
+["G","The helper provides steadying assistance only intermittently during walking 10 feet. Code:",["06","05","04","03"],2,"Supervision or touching assistance (04) applies whether cueing or steadying is provided throughout or intermittently."],
+
+["M","M2001 Drug Regimen Review screens for:",["Only drug allergies","Clinically significant issues such as interactions, duplicate therapy, omissions, dosage errors and non-adherence","Only high-risk drugs","Cost of medications"],1,"The drug regimen review identifies potential clinically significant medication issues across all of these categories."],
+["M","M2003 Medication Follow-up requires contacting the physician and completing recommended actions by:",["The end of the visit","Midnight of the next calendar day","72 hours","The next scheduled visit"],1,"M2003 is answered yes only if contact and prescribed actions were completed by midnight of the next calendar day."],
+["M","Which is NOT one of the high-risk drug classes in OASIS N0415?",["Anticoagulant","Opioid","Diuretic","Hypoglycemic"],2,"N0415 lists antipsychotic, anticoagulant, antibiotic, opioid, antiplatelet and hypoglycemic (including insulin). Diuretics are not included."],
+["M","N0415 Column 2 records:",["Dose","Whether an indication is noted for the drug","Route","Prescriber"],1,"Column 1 records whether the patient is taking the drug class; column 2 records whether an indication is noted."],
+["M","M2020 Management of Oral Medications excludes:",["Over-the-counter tablets","Injectable and IV medications","Liquid oral medications","Prescribed capsules"],1,"M2020 addresses oral medications only; injectables and IV medications are excluded."],
+["M","M2030 Management of Injectable Medications excludes:",["Insulin","Subcutaneous anticoagulants","IV and infusion therapy","Intramuscular injections"],2,"M2030 includes subcutaneous and intramuscular injections and excludes IV and infusion therapy."],
+["M","The drug regimen review should include:",["Prescription drugs only","All prescription and over-the-counter medications","Only new medications","Only high-risk medications"],1,"The review covers all medications the patient is using, prescribed and over the counter."],
+["M","A clinically significant medication issue is found at SOC and the physician is reached the next afternoon, with all actions completed that evening. M2003 is:",["Yes","No","NA","Dash"],0,"Contact and completion by midnight of the next calendar day meets the M2003 requirement."],
+
+["X","M2401 Intervention Synopsis asks whether:",["The patient improved","Physician-ordered interventions were implemented since the last assessment","Caregivers attended visits","The patient had falls"],1,"M2401 asks whether specific physician-ordered interventions (such as fall prevention, depression, pain and pressure ulcer interventions) were implemented."],
+["X","J1800 asks about falls:",["In the past 12 months","Since SOC/ROC","In the past 30 days","Only with injury"],1,"J1800 asks whether the patient had any falls since SOC/ROC."],
+["X","A staff member catches a patient who is losing balance and lowers them to the floor. For OASIS purposes:",["It is not a fall","It counts as a fall","It counts only if injury occurs","It counts as a near-miss"],1,"An intercepted or assisted fall still counts as a fall."],
+["X","Which is a major injury in J1900?",["Skin tear","Hip fracture","Bruise","Abrasion"],1,"Major injuries include bone fractures, joint dislocations, closed head injuries with altered consciousness and subdural hematoma."],
+["X","M2410 records:",["The type of inpatient facility the patient was admitted to","The discharge disposition","The referral source","The physician name"],0,"M2410 identifies the type of inpatient facility at transfer."],
+["X","M2420 records:",["Inpatient facility type","Discharge disposition – where the patient resides after discharge","Reason for transfer","Caregiver availability"],1,"M2420 records the patient's discharge disposition."],
+["X","M0906 records:",["Referral date","Discharge, transfer or death date","Recert date","SOC date"],1,"M0906 is the date of discharge, transfer or death."],
+["X","A2121 (Transfer of Health Information) asks whether a current reconciled medication list was provided to:",["The patient only","The subsequent provider at discharge","CMS","The payer"],1,"A2121 captures whether a current reconciled medication list was provided to the subsequent provider at discharge."],
+
+["E","OASIS-E2 became effective on:",["January 1, 2025","July 1, 2025","January 1, 2026","April 1, 2026"],3,"The OASIS-E2 manual and data set took effect April 1, 2026."],
+["E","In OASIS-E2, which item replaces the A1250 transportation items?",["A1255","A1260","R0310","A1110"],0,"A1255 replaces the A1250 items in OASIS-E2."],
+["E","Which E2 change affects the D0150 PHQ frequency items?",["They were removed","A dash is now an allowed value","They moved to Section C","They are collected at transfer"],1,"A dash is now an allowed value for the D0150 frequency items."],
+["E","Which assessment had several items added in OASIS-E2?",["RFA 01 SOC","RFA 03 ROC","RFA 06 Transfer","RFA 08 Death"],1,"OASIS-E2 added several items to the ROC (RFA 03)."],
+["E","Under CoP §484.55(a), the initial assessment visit is due:",["Within 48 hours of referral or return home, or on the physician-ordered SOC date","Within 5 days of referral","Within 24 hours","Within 7 days"],0,"The initial assessment must be held within 48 hours of referral or the patient's return home, or on the physician-ordered SOC date."],
+["E","OASIS data are submitted through which CMS system?",["PECOS","iQIES","NPPES","HIGLAS"],1,"Home health OASIS data are submitted to iQIES."],
+["E","An HHA that fails to meet HH QRP reporting requirements receives:",["A 1% reduction","A 2 percentage point reduction to its annual payment update","Termination","No penalty"],1,"Not meeting HH QRP reporting requirements reduces the annual payment update by 2 percentage points."],
+["E","Under PDGM, Medicare home health payment is made per:",["60-day episode","30-day period","Visit","Calendar month"],1,"PDGM pays per 30-day period, while certification remains 60 days."],
+["E","The PDGM comorbidity adjustment is based on:",["Secondary diagnoses on the claim","M1033","Number of medications","Patient age"],0,"The comorbidity adjustment uses secondary diagnoses reported on the claim."],
+["E","Which OASIS-based quality measure was removed from HH QRP preview reports starting with the April 2026 refresh?",["Discharge to Community","COVID-19 Vaccine: Percent of Patients Who Are Up to Date","Improvement in Ambulation","Timely Initiation of Care"],1,"CMS dropped the COVID-19 Vaccine up-to-date measure from preview reports with the April 2026 refresh."]
+];
+
+const $=s=>document.querySelector(s);
+const KEY="oasis-e2-exam-v1";
+let st=null; // {order:[], ans:{}, flag:{}, i, mode, done, ts}
+$("#qcount").textContent=Q.length;
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+
+function tab(name){
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===name));
+  ["guide","exam","results"].forEach(id=>$("#"+id).hidden=id!==name);
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function start(subset){
+  let order=subset||Q.map((_,i)=>i);
+  if($("#shuffle").checked) order=shuffle(order.slice());
+  st={order,ans:{},flag:{},i:0,mode:document.querySelector('input[name="mode"]:checked').value,done:false};
+  save(); $("#setup").hidden=true; $("#runner").hidden=false; tab("exam"); render();
+}
+$("#start").onclick=()=>start();
+const saved=load();
+if(saved&&!saved.done&&saved.order){$("#resume").hidden=false;$("#resume").onclick=()=>{st=saved;$("#setup").hidden=true;$("#runner").hidden=false;render()}}
+if(saved&&saved.done){st=saved;showResults()}
+
+function render(){
+  const qi=st.order[st.i], q=Q[qi], a=st.ans[qi];
+  $("#prog").style.width=(Object.keys(st.ans).length/st.order.length*100)+"%";
+  $("#qnum").textContent=`Question ${st.i+1} of ${st.order.length}`;
+  $("#qdom").textContent=D[q[0]];
+  $("#qtext").textContent=q[1];
+  const reveal=st.mode==="study"&&a!==undefined;
+  $("#opts").innerHTML="";
+  q[2].forEach((o,k)=>{
+    const b=document.createElement("button"); b.className="opt"; b.type="button";
+    b.innerHTML=`<span class="k">${"ABCD"[k]}</span><span></span>`; b.lastChild.textContent=o;
+    if(a===k) b.classList.add("sel");
+    if(reveal){ if(k===q[3]) b.classList.add("right"); else if(a===k) b.classList.add("wrong"); }
+    b.onclick=()=>{ if(st.mode==="study"&&a!==undefined) return; st.ans[qi]=k; save(); render(); };
+    $("#opts").appendChild(b);
+  });
+  const fb=$("#fb");
+  if(reveal){fb.hidden=false;fb.innerHTML=`<strong style="color:var(--${a===q[3]?"ok":"bad"})">${a===q[3]?"Correct.":"Incorrect."}</strong> Answer: ${"ABCD"[q[3]]}. `;fb.append(q[4])} else fb.hidden=true;
+  $("#prev").disabled=st.i===0; $("#next").disabled=st.i===st.order.length-1;
+  $("#flag").textContent=st.flag[qi]?"Unflag":"Flag";
+  const g=$("#grid"); g.innerHTML="";
+  st.order.forEach((x,n)=>{const b=document.createElement("button");b.textContent=n+1;b.type="button";
+    if(st.ans[x]!==undefined){ if(st.mode==="study") b.classList.add(st.ans[x]===Q[x][3]?"g":"b"); else b.classList.add("ans"); }
+    if(st.flag[x]) b.classList.add("fl"); if(n===st.i) b.classList.add("cur");
+    b.onclick=()=>{st.i=n;save();render()}; g.appendChild(b)});
+  const un=st.order.length-Object.keys(st.ans).length;
+  $("#unans").textContent=un?`${un} unanswered. Unanswered questions are scored as incorrect.`:"All questions answered.";
+}
+$("#prev").onclick=()=>{st.i--;save();render()};
+$("#next").onclick=()=>{st.i++;save();render()};
+$("#flag").onclick=()=>{const qi=st.order[st.i];st.flag[qi]=!st.flag[qi];save();render()};
+$("#submit").onclick=()=>{
+  const un=st.order.length-Object.keys(st.ans).length;
+  if(un&&$("#submit").dataset.confirm!=="1"){$("#submit").dataset.confirm="1";$("#submit").textContent=`Submit with ${un} blank`;setTimeout(()=>{$("#submit").dataset.confirm="";$("#submit").textContent="Submit exam"},4000);return}
+  $("#submit").dataset.confirm="";$("#submit").textContent="Submit exam";
+  st.done=true; st.ts=Date.now(); save(); showResults(); tab("results");
+};
+
+function showResults(){
+  $("#noresults").hidden=true; $("#res").hidden=false;
+  let c=0; const by={};
+  st.order.forEach(qi=>{const d=Q[qi][0];by[d]=by[d]||[0,0];by[d][1]++;if(st.ans[qi]===Q[qi][3]){c++;by[d][0]++}});
+  const pct=Math.round(c/st.order.length*100);
+  $("#pct").textContent=pct+"%";
+  $("#raw").textContent=`${c} of ${st.order.length} correct`;
+  const v=$("#verdict"); v.className="pill "+(pct>=80?"pass":"fail"); v.textContent=pct>=80?"Meets 80% target":"Below 80% target";
+  $("#when").textContent=st.ts?"Submitted "+new Date(st.ts).toLocaleString():"";
+  $("#doms").innerHTML="";
+  Object.keys(D).filter(k=>by[k]).forEach(k=>{const [a,t]=by[k],p=Math.round(a/t*100);
+    const r=document.createElement("div");r.className="drow";
+    r.innerHTML=`<span>${D[k]}</span><div class="bar"><i style="width:${p}%;background:var(--${p>=80?"ok":p>=60?"flag":"bad"})"></i></div><span>${a}/${t}</span>`;$("#doms").appendChild(r)});
+  renderReview();
+}
+function renderReview(){
+  const f=document.querySelector('input[name="rf"]:checked').value, box=$("#review"); box.innerHTML="";
+  st.order.forEach((qi,n)=>{const q=Q[qi],a=st.ans[qi],ok=a===q[3];
+    if(f==="miss"&&ok) return; if(f==="flag"&&!st.flag[qi]) return;
+    const d=document.createElement("div");d.className="rv";
+    d.innerHTML=`<div class="qhead" style="margin:0 0 4px"><span class="qnum"><span class="mark ${ok?"g":"b"}">${ok?"✓":"✗"}</span>Q${n+1}</span><span class="dom">${D[q[0]]}</span></div><p class="qtext"></p><p class="ln"></p><p class="ln"></p><p class="ln src"></p>`;
+    const ps=d.querySelectorAll("p");
+    ps[0].textContent=q[1];
+    ps[1].textContent="Your answer: "+(a===undefined?"(blank)":"ABCD"[a]+". "+q[2][a]);
+    ps[2].textContent="Correct answer: "+"ABCD"[q[3]]+". "+q[2][q[3]];
+    ps[3].textContent="Rationale: "+q[4];
+    box.appendChild(d)});
+  if(!box.children.length) box.innerHTML='<p class="src">Nothing to show for this filter.</p>';
+}
+document.querySelectorAll('input[name="rf"]').forEach(r=>r.onchange=renderReview);
+$("#retake").onclick=()=>{$("#runner").hidden=true;$("#setup").hidden=false;$("#resume").hidden=true;tab("exam")};
+$("#retakeMiss").onclick=()=>{const m=st.order.filter(qi=>st.ans[qi]!==Q[qi][3]);if(m.length)start(m)};
+</script>
+
+</body>
+</html>
